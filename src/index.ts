@@ -1,17 +1,21 @@
 import express, { Express, Request, Response } from 'express';
+import Ain from "@ainblockchain/ain-js";
 import dotenv from 'dotenv';
-import Ainize from '@ainize-team/ainize-js';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
+import { getBlockChainEndpoint } from './constants';
 dotenv.config();
-const userPrivateKey = process.env.PRIVATE_KEY? process.env.PRIVATE_KEY : '';
+const privateKey = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : '';
+const chainId = parseInt(process.env.BLOCKCHAIN_NETWORK ? process.env.BLOCKCHAIN_NETWORK : '1');
+const port = process.env.PORT ? process.env.PORT : '8000';
 const app: Express = express();
 app.use(express.json());
-const port = process.env.PORT;
-const ainize = new Ainize(0);
-ainize.login(userPrivateKey);
+
+const blockchainEndpoint = getBlockChainEndpoint(chainId);
+const ain = new Ain(blockchainEndpoint, chainId);
+ain.wallet.setDefaultAccount(privateKey);
 
 app.post('/service',
-  ainize.middleware.blockchainTriggerFilter,
+  blockchainTriggerFilter,
   async (req: Request, res: Response) => {
   const { appName, requestData, requestKey } = ainize.internal.getDataFromServiceRequest(req);
   console.log("service requestKey: ", requestKey);

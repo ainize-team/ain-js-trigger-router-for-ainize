@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@ainblockchain/ain-js@^1.6.3":
+"@ainblockchain/ain-js@^1.6.3", "@ainblockchain/ain-js@^1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@ainblockchain/ain-js/-/ain-js-1.7.1.tgz#ddddf76405f4b0156e2238b7462c89c0b9c9fffb"
   integrity sha512-FLhoPLzZWHucogc2SZE9AJOT2EaR4Wj7jpauctulN+7RKeb5KISAWfx0gY3YXV1IICydO8pMQ6mlX724ZcCgrw==
