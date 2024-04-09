@@ -1,15 +1,14 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
-import { getBlockChainEndpoint } from './constants';
 import AinModule from './ain';
 import Middleware from './middlewares/middleware';
 import { extractDataFromServiceRequest } from './utils/extractor';
+import { handleDeposit, handleRequest } from './internal';
 dotenv.config();
 const privateKey = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : '';
 const chainId = parseInt(process.env.BLOCKCHAIN_NETWORK ? process.env.BLOCKCHAIN_NETWORK : '1');
 const port = process.env.PORT ? process.env.PORT : '8000';
-const blockchainEndpoint = getBlockChainEndpoint(chainId);
 const ainModule = new AinModule();
 if (chainId != 0 && chainId != 1) {
   throw new Error('Invalid chain Id.');
@@ -28,8 +27,9 @@ app.post('/service',
     const service = await ainModule.getService(appName);
     const amount = 0.1;
     console.log(appName, requestData, amount);
-    // TODO: replace handleRequest
-    // await ainize.internal.handleRequest(req, amount, RESPONSE_STATUS.SUCCESS, responseData);
+    // TODO: connect with TGI
+    const responseData = await "TODO";
+    await handleRequest(req, amount, RESPONSE_STATUS.SUCCESS, responseData);
   }catch(e) {
     // TODO: replace handleRequest
     // await ainize.internal.handleRequest(req, 0, RESPONSE_STATUS.FAIL,'error');
@@ -43,9 +43,8 @@ app.post('/deposit',
   async (req: Request, res:Response) => {
   console.log("deposit");
   try{ 
-    // TODO: replace handleDeposit
-    // const result = await ainize.internal.handleDeposit(req);
-    // console.log(result);
+    const result = await handleDeposit(req);
+    console.log(result);
   }catch(e) {
     console.log('error: ',e);
     res.send('error');

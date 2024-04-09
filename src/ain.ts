@@ -1,6 +1,8 @@
 import Ain from "@ainblockchain/ain-js";
 import { Path, getBlockChainEndpoint } from "./constants";
 import Service from "@ainize-team/ainize-js/dist/service";
+import { txResult } from "./types/type";
+import { TransactionBody } from "@ainblockchain/ain-js/lib/types";
 
 export default class AinModule {
   private ain!: Ain;
@@ -32,4 +34,39 @@ export default class AinModule {
     }
     return new Service(serviceName);
   }
+
+  private hasFailedOpResultList(result: txResult): boolean {
+    if (result.result_list) {
+      return Object.values(result.result_list).some(
+        (result: { code: number }) => result.code !== 0
+      );
+    }
+    return result.code !== 0;
+  }
+
+  private handleTxResultWrapper(operation: Function) {
+    return async (args: any) => {
+      const res = await operation(args);
+      // ainWalletSigner return txHash or undefined.
+      if (typeof res === 'string') {
+        return res;
+      } else if (res === undefined) {
+        throw new Error(`Failed to build transaction.`);
+      }
+      // defaultSigner return a result object of transactions.
+      const { tx_hash, result } = res;
+      if (this.hasFailedOpResultList(result)) {
+        throw new Error(
+          `Failed to send transaction (${tx_hash}).\n Tx Result: ${JSON.stringify(result)}`
+        );
+      }
+      return tx_hash;
+    }
+  }
+
+  private async _sendTransaction(txBody: TransactionBody) {
+    return await this.ain.signer.sendTransaction(txBody);
+  }
+  
+  sendTransaction = this.handleTxResultWrapper(this._sendTransaction.bind(this));
 }
