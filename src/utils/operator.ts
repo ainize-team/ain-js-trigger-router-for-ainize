@@ -1,7 +1,7 @@
 import { SetOperation } from "@ainblockchain/ain-js/lib/types";
 import { Path } from "../constants";
-import { HISTORY_TYPE, RESPONSE_STATUS } from "../types/type";
 import { buildSetOperation } from "./builder";
+import { HISTORY_TYPE, RESPONSE_STATUS } from "@ainize-team/ainize-js/dist/types/type";
 
 // ADMIN: need defaultAccount
 export const getChangeBalanceOp = (

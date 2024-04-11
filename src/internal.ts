@@ -1,10 +1,10 @@
 import { SetOperation } from "@ainblockchain/ain-js/lib/types";
 import { Request } from "express";
 import { getChangeBalanceOp, getResponseOp, getWriteHistoryOp } from "./utils/operator";
-import { HISTORY_TYPE, RESPONSE_STATUS, deposit, request, response } from "./types/type";
 import { buildTxBody } from "./utils/builder";
 import AinModule from "./ain";
 import { extractDataFromDepositRequest, extractDataFromServiceRequest } from "./utils/extractor";
+import { HISTORY_TYPE, RESPONSE_STATUS } from "@ainize-team/ainize-js/dist/types/type";
   
 export const handleDeposit = async (req: Request) => {
   const ain = AinModule.getInstance();

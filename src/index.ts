@@ -1,10 +1,10 @@
 import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
+import dotenv from 'dotenv'; 
 import AinModule from './ain';
 import Middleware from './middlewares/middleware';
 import { extractDataFromServiceRequest } from './utils/extractor';
 import { handleDeposit, handleRequest } from './internal';
+import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
 dotenv.config();
 const privateKey = process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : '';
 const chainId = parseInt(process.env.BLOCKCHAIN_NETWORK ? process.env.BLOCKCHAIN_NETWORK : '1');

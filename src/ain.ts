@@ -1,8 +1,8 @@
 import Ain from "@ainblockchain/ain-js";
 import { Path, getBlockChainEndpoint } from "./constants";
 import Service from "@ainize-team/ainize-js/dist/service";
-import { txResult } from "./types/type";
 import { TransactionBody } from "@ainblockchain/ain-js/lib/types";
+import { txResult } from "@ainize-team/ainize-js/dist/types/type";
 
 export default class AinModule {
   private ain!: Ain;

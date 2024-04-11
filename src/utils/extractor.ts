@@ -1,5 +1,5 @@
+import { deposit, request } from "@ainize-team/ainize-js/dist/types/type";
 import { Request } from "express";
-import { deposit, request } from "../types/type";
 
 export const extractDataFromServiceRequest = (req:Request) => {
   if(!req.body.valuePath[1] || !req.body.valuePath[3] || !req.body.valuePath[4] || !req.body.value) {
