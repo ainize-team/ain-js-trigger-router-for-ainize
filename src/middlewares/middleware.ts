@@ -11,14 +11,7 @@ export default class Middleware {
     this.cache = new NodeCache();
   }
 
-  /**
-   * Middleware for AI Network trigger call. It will filter duplicated request triggered by same transaction.
-   * It will reject requests which is not from AI Network trigger.
-   * @param {Request} request - Request data 
-   * @param {Res} response - Response data
-   * @param {NextFunction} next - Next function
-   * @returns Null if if request is duplicated.
-   */
+
   blockchainTriggerFilter = async (req: Request, res: Response, next: NextFunction) => {
     //check if request is from blockchain trigger
     try {
@@ -44,9 +37,4 @@ export default class Middleware {
       return;
     }
   }
-  /**
-   *  DEPRECATED
-   *  use blockchainTriggerFilter instead
-   */
-  triggerDuplicateFilter = this.blockchainTriggerFilter;
 }
