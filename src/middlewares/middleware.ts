@@ -22,7 +22,7 @@ export default class Middleware {
       // NOTE(yoojin): Validation will changed. Temp comment out.
       // const result = await this.ain.getValue(triggerPath);
       
-      // If request is first reque st, set cache 
+      // If request is first request, set cache 
       if (this.cache.get(txHash) && this.cache.get(txHash) !== "error") {
         res.send("Duplicated");
         return;
