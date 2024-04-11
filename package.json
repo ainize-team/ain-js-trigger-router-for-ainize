@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "dev": "rm -rf ./dist && tsc",
+    "start": "rm -rf ./dist && tsc && node dist/index.js",
     "test": "NODE_ENV=dev jest --passWithNoTests",
     "docs": "yarn build && typedoc --options typedoc.json --out docs"
   },
