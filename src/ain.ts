@@ -82,7 +82,7 @@ export default class AinModule {
   }
 
   private async _sendTransaction(txBody: TransactionBody) {
-    return await this.ain.signer.sendTransaction(txBody);
+    return await this.ain.sendTransaction(txBody);
   }
   
   sendTransaction = this.handleTxResultWrapper(this._sendTransaction.bind(this));

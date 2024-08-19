@@ -27,7 +27,7 @@ app.post('/service',
     const service = await ainModule.getService(appName);
     const amount = 0;
     console.log(appName, requestData, amount);
-    const responseData = await inference(requestData);
+    const responseData = await inference(requestData.prompt);
     await handleRequest(req, amount, RESPONSE_STATUS.SUCCESS, responseData);
   }catch(e) {
     // TODO: replace handleRequest

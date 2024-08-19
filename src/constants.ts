@@ -1,7 +1,7 @@
 
 
 export const getBlockChainEndpoint = (chainId: number) =>{
-  return chainId === 1 ? "https://mainnet-event.ainetwork.ai" : "https://testnet-event.ainetwork.ai"
+  return chainId === 1 ? "https://mainnet-api.ainetwork.ai" : "https://testnet-api.ainetwork.ai"
 }
 export const getBlockChainEventEndpoint = (chainId: number) => {
   return chainId === 1 ? "wss://mainnet-event.ainetwork.ai" : "wss://testnet-event.ainetwork.ai"
