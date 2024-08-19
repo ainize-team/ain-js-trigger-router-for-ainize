@@ -1,5 +1,5 @@
 import Ain from "@ainblockchain/ain-js";
-import { Path, getBlockChainEndpoint } from "./constants";
+import { Path, getBlockChainEndpoint, getBlockChainEventEndpoint } from "./constants";
 import Service from "@ainize-team/ainize-js/dist/service";
 import { TransactionBody } from "@ainblockchain/ain-js/lib/types";
 import { txResult } from "@ainize-team/ainize-js/dist/types/type";
@@ -17,14 +17,14 @@ export default class AinModule {
 
   initAin(chainId: 0 | 1, privateKey: string ) {
     const blockchainEndpoint = getBlockChainEndpoint(chainId);
-    this.ain = new Ain(blockchainEndpoint, chainId);
+    const blockchainEventEndpoint= getBlockChainEventEndpoint(chainId);
+    this.ain = new Ain(blockchainEndpoint, blockchainEventEndpoint, chainId);
     this.ain.wallet.addAndSetDefaultAccount(privateKey);
   }
 
   async getValue(path: string) {
     return await this.ain.db.ref(path).getValue();
   }
-
 
   async getService(serviceName: string): Promise<Service> {
     const servicePath = Path.app(serviceName).root();
@@ -33,6 +33,23 @@ export default class AinModule {
       throw new Error("Service not found");
     }
     return new Service(serviceName);
+  }
+
+  getMyAddress(): string {
+    const address =  this.ain.wallet.defaultAccount?.address 
+    if(!address){
+      throw new Error("Set default account first.");
+    }
+    return address;
+  }
+  
+  async isServiceExist(serviceName: string): Promise<boolean> {
+    const servicePath = Path.app(serviceName).root();
+    const serviceData = await this.getValue(servicePath);
+    if(!serviceData) {
+      return false
+    }
+    return true
   }
 
   private hasFailedOpResultList(result: txResult): boolean {
@@ -69,4 +86,5 @@ export default class AinModule {
   }
   
   sendTransaction = this.handleTxResultWrapper(this._sendTransaction.bind(this));
+
 }

@@ -4,7 +4,7 @@ import { getChangeBalanceOp, getResponseOp, getWriteHistoryOp } from "./utils/op
 import { buildTxBody } from "./utils/builder";
 import AinModule from "./ain";
 import { extractDataFromDepositRequest, extractDataFromServiceRequest } from "./utils/extractor";
-import { HISTORY_TYPE, RESPONSE_STATUS } from "@ainize-team/ainize-js/dist/types/type";
+import { deployConfig, HISTORY_TYPE, RESPONSE_STATUS } from "@ainize-team/ainize-js/dist/types/type";
   
 export const handleDeposit = async (req: Request) => {
   const ain = AinModule.getInstance();
