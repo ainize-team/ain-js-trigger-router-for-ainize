@@ -31,6 +31,5 @@ export const handleRequest = async(req: Request, cost: number, status: RESPONSE_
     ops.push(writeHistoryOp);
   }
   const txBody = buildTxBody(ops);
-  console.log('ain: ',ain);
   return await ain.sendTransaction(txBody);
 }

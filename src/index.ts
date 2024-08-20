@@ -8,7 +8,7 @@ import './config'; // 환경 변수 검증을 바로 수행
 import { parseChainId } from './constants';
 import { inference } from './inference';
 
-const ainModule = new AinModule();
+const ainModule = AinModule.getInstance();
 ainModule.initAin(parseChainId(process.env.BLOCKCHAIN_NETWORK), process.env.PRIVATE_KEY);
 const middleware = new Middleware();
 const app: Express = express();

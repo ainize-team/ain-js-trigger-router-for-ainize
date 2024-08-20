@@ -20,6 +20,7 @@ export default class AinModule {
     const blockchainEventEndpoint= getBlockChainEventEndpoint(chainId);
     this.ain = new Ain(blockchainEndpoint, blockchainEventEndpoint, chainId);
     this.ain.wallet.addAndSetDefaultAccount(privateKey);
+    console.log("ain init finish")
   }
 
   async getValue(path: string) {
