@@ -1,7 +1,4 @@
 export const inference = async (prompt:string):Promise<string> =>{
-  console.log(String(process.env.INFERENCE_URL))
-  console.log(String(process.env.API_KEY))
-  console.log(String(process.env.MODEL_NAME))
   const response = await fetch(
     String(process.env.INFERENCE_URL),
     {
