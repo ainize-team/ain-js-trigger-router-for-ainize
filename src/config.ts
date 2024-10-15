@@ -8,7 +8,9 @@ function validateEnv() {
         'BLOCKCHAIN_NETWORK',
         'SERVICE_NAME',
         'SERVICE_URL',
-        'OLLAMA_URL',
+        'INFERENCE_URL',
+        'MODEL_NAME',
+        'API_KEY',
         // 필수 환경변수 입력
     ];
 

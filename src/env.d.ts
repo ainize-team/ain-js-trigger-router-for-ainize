@@ -4,7 +4,9 @@ declare namespace NodeJS {
     PRIVATE_KEY: string;
     SERVICE_NAME: string;
     SERVICE_URL: string;
-    OLLAMA_URL: string;
+    INFERENCE_URL: string;
+    MODEL_NAME: string;
+    API_KEY: string;
     PORT?: string;
       // 다른 환경 변수를 여기에 정의
   }
