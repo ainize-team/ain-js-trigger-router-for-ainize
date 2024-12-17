@@ -6,8 +6,7 @@ function validateEnv() {
     const requiredEnvVars = [
         'PRIVATE_KEY',
         'BLOCKCHAIN_NETWORK',
-        'SERVICE_NAME',
-        'SERVICE_URL',
+        'MODEL_URL',
         'INFERENCE_URL',
         'MODEL_NAME',
         'API_KEY',

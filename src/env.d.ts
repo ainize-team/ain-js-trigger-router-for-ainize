@@ -2,8 +2,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     BLOCKCHAIN_NETWORK: '1' | '0';
     PRIVATE_KEY: string;
-    SERVICE_NAME: string;
-    SERVICE_URL: string;
+    MODEL_URL: string;
     INFERENCE_URL: string;
     MODEL_NAME: string;
     API_KEY: string;

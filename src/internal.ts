@@ -3,7 +3,7 @@ import { Request } from "express";
 import { getChangeBalanceOp, getResponseOp, getWriteHistoryOp } from "./utils/operator";
 import { buildTxBody } from "./utils/builder";
 import AinModule from "./ain";
-import { extractDataFromDepositRequest, extractDataFromServiceRequest } from "./utils/extractor";
+import { extractDataFromDepositRequest, extractDataFromModelRequest } from "./utils/extractor";
 import { deployConfig, HISTORY_TYPE, RESPONSE_STATUS } from "@ainize-team/ainize-js/dist/types/type";
   
 export const handleDeposit = async (req: Request) => {
@@ -20,7 +20,7 @@ export const handleDeposit = async (req: Request) => {
 
 export const handleRequest = async(req: Request, cost: number, status: RESPONSE_STATUS, responseData: string) => {
   const ain = AinModule.getInstance();
-  const { requesterAddress, requestKey, appName } = extractDataFromServiceRequest(req);
+  const { requesterAddress, requestKey, appName } = extractDataFromModelRequest(req);
   const ops:SetOperation[] = [];
   const responseOp = getResponseOp(appName, requesterAddress, requestKey, status, responseData, cost);
   ops.push(responseOp);

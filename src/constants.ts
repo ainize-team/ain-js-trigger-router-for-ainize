@@ -21,13 +21,13 @@ export const Path = {
       deposit: () => `${Path.app(appName).root()}/deposit`,
       depositOfUser: (userAddress: string) => `${Path.app(appName).deposit()}/${userAddress}`,
       billingConfig: () => `${Path.app(appName).root()}/billingConfig`,
-      service: () => `${Path.app(appName).root()}/service`,
-      userOfService: (userAddress: string) => 
-        `${Path.app(appName).service()}/${userAddress}`,
+      model: () => `${Path.app(appName).root()}/model`,
+      userOfModel: (userAddress: string) => 
+        `${Path.app(appName).model()}/${userAddress}`,
       request: (userAddress: string, requestKey: string) => 
-        `${Path.app(appName).userOfService(userAddress)}/${requestKey}/request`,
+        `${Path.app(appName).userOfModel(userAddress)}/${requestKey}/request`,
       response: (userAddress: string, requestKey: string) => 
-        `${Path.app(appName).userOfService(userAddress)}/${requestKey}/response`,
+        `${Path.app(appName).userOfModel(userAddress)}/${requestKey}/response`,
     }
   },
   transfer: (from: string, to: string, transferKey: string) => 

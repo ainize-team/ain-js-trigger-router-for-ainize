@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import AinModule from './ain';
 import Middleware from './middlewares/middleware';
-import { extractDataFromServiceRequest } from './utils/extractor';
+import { extractDataFromModelRequest } from './utils/extractor';
 import { handleDeposit, handleRequest } from './internal';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
 import './config'; // 환경 변수 검증을 바로 수행
@@ -15,16 +15,16 @@ const app: Express = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-// ainModule.ensureServiceOwnership()
+// ainModule.ensureModelOwnership()
 
 
-app.post('/service',
+app.post('/model',
   middleware.blockchainTriggerFilter,
   async (req: Request, res: Response) => {
-  const { appName, requestData, requestKey } = extractDataFromServiceRequest(req);
-  console.log("service requestKey: ", requestKey);
+  const { appName, requestData, requestKey } = extractDataFromModelRequest(req);
+  console.log("model requestKey: ", requestKey);
   try{
-    const service = await ainModule.getService(appName);
+    const model = await ainModule.getModel(appName);
     const amount = 0;
     console.log(appName, requestData, amount);
     const responseData = await inference(requestData.prompt);

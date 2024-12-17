@@ -1,6 +1,6 @@
 import Ain from "@ainblockchain/ain-js";
 import { Path, getBlockChainEndpoint, getBlockChainEventEndpoint } from "./constants";
-import Service from "@ainize-team/ainize-js/dist/service";
+import Model from "@ainize-team/ainize-js/dist/model";
 import { TransactionBody } from "@ainblockchain/ain-js/lib/types";
 import { txResult } from "@ainize-team/ainize-js/dist/types/type";
 
@@ -27,13 +27,13 @@ export default class AinModule {
     return await this.ain.db.ref(path).getValue();
   }
 
-  async getService(serviceName: string): Promise<Service> {
-    const servicePath = Path.app(serviceName).root();
-    const serviceData = await this.getValue(servicePath);
-    if(!serviceData) {
-      throw new Error("Service not found");
+  async getModel(modelName: string): Promise<Model> {
+    const modelPath = Path.app(modelName).root();
+    const modelData = await this.getValue(modelPath);
+    if(!modelData) {
+      throw new Error("Model not found");
     }
-    return new Service(serviceName);
+    return new Model(modelName);
   }
 
   getMyAddress(): string {
@@ -44,10 +44,10 @@ export default class AinModule {
     return address;
   }
   
-  async isServiceExist(serviceName: string): Promise<boolean> {
-    const servicePath = Path.app(serviceName).root();
-    const serviceData = await this.getValue(servicePath);
-    if(!serviceData) {
+  async isModelExist(modelName: string): Promise<boolean> {
+    const modelPath = Path.app(modelName).root();
+    const modelData = await this.getValue(modelPath);
+    if(!modelData) {
       return false
     }
     return true
