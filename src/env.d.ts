@@ -7,6 +7,6 @@ declare namespace NodeJS {
     MODEL_NAME: string;
     API_KEY: string;
     PORT?: string;
-      // 다른 환경 변수를 여기에 정의
+    // Add more environment variables here
   }
 }
