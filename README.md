@@ -10,7 +10,21 @@ node >= 18
 
 ### Install
 
-Clone this repogitory.
+Clone this repository.
+```
+git clone git@github.com:ainize-team/ainize-wrapper-server.git
+```
+
+### Set env
+```JS
+BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
+PRIVATE_KEY= // App owner's private key.
+MODEL_URL= // LLM Service endpoint.
+INFERENCE_URL= // LLM Inference endpoint.
+MODEL_NAME= // Model name.
+API_KEY= // API Key to use model. (optional) 
+PORT= // Port number to run this server. (default: 3000)
+```
 
 ### Inference endpoint
 
@@ -33,4 +47,38 @@ app.post(
     await ainize.internal.handleRequest(req, 0, RESPONSE_STATUS.FAIL,'error'); // Write error to response path.
   }
 });
+```
+
+### Connect Model
+
+If the usage of your AI service is as described below, you can connect your service by simply modifying the `.env` file. However, if further adjustments are needed, edit `src/inference.ts`.
+```JS
+export const inference = async (prompt: string): Promise<string> =>{
+  const response = await fetch(
+    String(process.env.INFERENCE_URL),
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${String(process.env.API_KEY)}`
+      },
+      body: JSON.stringify({
+        model: String(process.env.MODEL_NAME),
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      })
+    }
+  )
+  if (!response.ok) {
+    throw new Error(
+      `Fail to inference: ${JSON.stringify(await response.json())}`
+    );
+  }
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 ```
