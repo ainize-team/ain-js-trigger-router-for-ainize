@@ -1,6 +1,6 @@
 # Ainize Wrapper Server
 
-It's an template backend of AI Model deployed by [ainize-js](https://github.com/ainize-team/ainize-js)
+Ainize wrapper server is an template backend of AI Model deployed by [ainize-js](https://github.com/ainize-team/ainize-js)
 
 ## Requirements
 
