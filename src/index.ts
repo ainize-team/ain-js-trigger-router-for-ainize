@@ -4,7 +4,7 @@ import Middleware from './middlewares/middleware';
 import { extractDataFromModelRequest } from './utils/extractor';
 import { handleDeposit, handleRequest } from './internal';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
-import './config'; // 환경 변수 검증을 바로 수행
+import './config'; // Validate environment variables immediately
 import { parseChainId } from './constants';
 import { inference } from './inference';
 
@@ -14,9 +14,6 @@ const middleware = new Middleware();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
-
-// ainModule.ensureModelOwnership()
-
 
 app.post('/model',
   middleware.blockchainTriggerFilter,
@@ -37,6 +34,7 @@ app.post('/model',
   }
 });
 
+//Deprecated
 // app.post('/deposit',
 //   middleware.blockchainTriggerFilter,
 //   async (req: Request, res:Response) => {

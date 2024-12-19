@@ -10,7 +10,7 @@ function validateEnv() {
         'INFERENCE_URL',
         'MODEL_NAME',
         'API_KEY',
-        // 필수 환경변수 입력
+        // Add more required environment variables here
     ];
 
     requiredEnvVars.forEach((key) => {
