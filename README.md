@@ -1,29 +1,90 @@
-# Ainize Wrapper Server
 
+# Ainize Wrapper Server
 Ainize wrapper server is an template backend of AI Model deployed by [ainize-js](https://github.com/ainize-team/ainize-js)
 
 ## Requirements
 
 node >= 18
 
-## usage
 
-### Install
+## Install
 
 Clone this repository.
 ```
 git clone git@github.com:ainize-team/ainize-wrapper-server.git
 ```
 
-### Set env
+## Set envs
 ```JS
 BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
-PRIVATE_KEY= // App owner's private key.
+PRIVATE_KEY= // App owner's AI Network private key.
 MODEL_URL= // LLM Service endpoint.
 INFERENCE_URL= // LLM Inference endpoint.
 MODEL_NAME= // Model name.
 API_KEY= // API Key to use model. (optional) 
 PORT= // Port number to run this server. (default: 3000)
+```
+## usage
+
+## Ready to get POST request from AI Network trigger function
+Trigger function 은 AI Network의 기능 중 하나로, 블록체인 DB의 특정 패스의 값이 변화하면 자동으로 지정된 url에 POST 요청을 실행한다. ([AI Network Docs](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger))
+
+Trigger function 으로 실행된 요청에는 아래와 같은 매우 복잡한 request data가 포함된다.
+```js
+{
+  fid: 'function-id',
+  function: {
+    function_type: 'REST',
+    function_url: 'https://function_url.ainetwork.ai/',
+    function_id: 'function-id'
+  },
+  valuePath: [
+    'apps',
+    'app_name',
+    'sub_path',
+    '0xaddress...', // Path variable matched with functionPath.
+    ...
+    ],
+  functionPath: [
+    'apps',
+    'app_name',
+    'sub_path',
+    '$address', // Path variable name. Start with '$'
+    ...
+  ],
+  value: <ANY_DATA_TO_WRITE_ON_BLOCKCHAIN>,
+  ...
+  params: {
+    address: '0xaddress...' // Path variable.
+  },
+  ...
+  transaction: {
+    tx_body: { ... },
+    signature: '0xsignature...',
+    ...
+  },
+  ...
+}
+```
+
+이 데이터를 쉽게 처리할 수 있도록 ainize-wrapper-server 코드에서 다양한 기능을 제공한다.
+
+### Middle ware to check It is from trigger function.
+```JS
+import Middleware from './middlewares/middleware';
+const middleware = new Middleware();
+
+app.post(
+  ...
+  middleware.blockchainTriggerFilter,
+  ...
+)
+```
+### Extracting the required datas from the request
+```JS
+import { extractDataFromModelRequest } from './utils/extractor';
+
+  const { appName, requestData, requestKey } = extractDataFromModelRequest(req);
 ```
 
 ### Inference endpoint
