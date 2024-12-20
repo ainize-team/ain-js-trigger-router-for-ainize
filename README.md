@@ -18,18 +18,18 @@ git clone git@github.com:ainize-team/ainize-wrapper-server.git
 ```JS
 BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
 PRIVATE_KEY= // App owner's AI Network private key.
-MODEL_URL= // LLM Service endpoint.
 INFERENCE_URL= // LLM Inference endpoint.
 MODEL_NAME= // Model name.
-API_KEY= // API Key to use model. (optional) 
-PORT= // Port number to run this server. (default: 3000)
+API_KEY= // API Key to using your model. (optional) 
+PORT= // Port number to run this server. (optional, default: 3000)
 ```
 ## usage
 
 ## Ready to get POST request from AI Network trigger function
-Trigger function 은 AI Network의 기능 중 하나로, 블록체인 DB의 특정 패스의 값이 변화하면 자동으로 지정된 url에 POST 요청을 실행한다. ([AI Network Docs](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger))
 
-Trigger function 으로 실행된 요청에는 아래와 같은 매우 복잡한 request data가 포함된다.
+A trigger function in AI Network automatically sends POST requests to a specified URL whenever a specific value in the blockchain database changes. For more details, see the [AI Network Docs](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger)
+
+Requests from trigger functions include complex data structures. 
 ```js
 {
   fid: 'function-id',
@@ -67,9 +67,10 @@ Trigger function 으로 실행된 요청에는 아래와 같은 매우 복잡한
 }
 ```
 
-이 데이터를 쉽게 처리할 수 있도록 ainize-wrapper-server 코드에서 다양한 기능을 제공한다.
+The ainize-wrapper-server simplifies handling these requests with built-in utilities.
 
 ### Middle ware to check It is from trigger function.
+Use the provided middleware `blockchainTriggerFilter` to verify that a request originates from a trigger function.
 ```JS
 import Middleware from './middlewares/middleware';
 const middleware = new Middleware();
@@ -81,50 +82,77 @@ app.post(
 )
 ```
 ### Extracting the required datas from the request
+Easily extract key data points using helper functions.
 ```JS
 import { extractDataFromModelRequest } from './utils/extractor';
 
-  const { appName, requestData, requestKey } = extractDataFromModelRequest(req);
+const { 
+  appName, 
+  requesterAddress,
+  requestData, 
+  requestKey 
+} = extractDataFromModelRequest(req);
 ```
 
-### Inference endpoint
+### Set inference endpoint
 
-The AI model deployed via Ainize automatically sends a POST request to `https://YOUR.ENDPOINT.ai/model` when an inference request is made, utilizing the trigger function feature of the AI Network blockchain.
-
-You can implement the inference function by modifying `app.post('/model', ...)` in src/index.ts.
+위 기능들을 이용하여 trigger function을 통해 들어온 요청을 처리하는 라우터가 `src/index.ts`에 정의되어 있다. Ainize-js 를 통해 배포된 trigger function은 고정적으로 `/model` 에 POST 요청을 보낸다.
 ```JS
 app.post(
   '/model',
   middleware.blockchainTriggerFilter, // Check request is from AI Network.
   async (req: Request, res: Response) => {
-  const { appName, requestData, requestKey } = extractDataFromModelRequest(req); // Parse triggered data
-  try {
-    const model = await ainModule.getModel(appName);
-    const amount = 0; // Cost of inference. 
-    const responseData = await inference(requestData.prompt); // You need to change this "inference" function to set your model.
-    await handleRequest(req, amount, RESPONSE_STATUS.SUCCESS, responseData); // Discount user's credit and write the response data to blockchain.
-  } catch(e) {
-    console.log('error: ', e);
-    await ainize.internal.handleRequest(req, 0, RESPONSE_STATUS.FAIL,'error'); // Write error to response path.
-  }
+    ...
 });
 ```
 
-### Connect Model
+### Connect your inference service.
 
-If the usage of your AI service is as described below, you can connect your service by simply modifying the `.env` file. However, if further adjustments are needed, edit `src/inference.ts`.
+받아온 데이터를 당신의 AI Service에 맞춰 가공하고 요청을 보낼 수 있도록 당신은 `src/inference.ts` 를 수정해야한다.
 ```JS
-export const inference = async (prompt: string): Promise<string> =>{
+import { Request } from 'express'
+
+export const inference = async (req: Request): Promise<any> =>{
+  const { 
+    appName, 
+    requesterAddress,
+    requestData, 
+    requestKey 
+  } = extractDataFromModelRequest(req);
+
+  ////// Insert your AI Service's Inference Code. //////
+
+  // return the result
+}
+```
+
+아래는 ainize에서 무료로 제공하는 llama 3.1을 연결하는 예시코드이다.
+```JS
+export const inference = async (req: Request): Promise<any> =>{
+  const { 
+    appName, 
+    requesterAddress,
+    requestData, 
+    requestKey 
+  } = extractDataFromModelRequest(req);
+
+  ////// Insert your AI Service's Inference Code. //////
+  const modelName = process.env.MODEL_NAME as string;
+  const inferenceUrl = process.env.INFERENCE_URL as string;
+  const apiKey = process.env.API_KEY as string;
+
+  const prompt = requestData.prompt;
+
   const response = await fetch(
-    String(process.env.INFERENCE_URL),
+    inferenceUrl,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${String(process.env.API_KEY)}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: String(process.env.MODEL_NAME),
+        model: modelName,
         messages: [
           {
             role: 'user',
@@ -135,11 +163,12 @@ export const inference = async (prompt: string): Promise<string> =>{
     }
   )
   if (!response.ok) {
-    throw new Error(
-      `Fail to inference: ${JSON.stringify(await response.json())}`
-    );
+    throw new Error(`Fail to inference: ${JSON.stringify(await response.json())}`);
   }
   const data = await response.json();
+
+  // return the result
   return data.choices[0].message.content;
 }
+
 ```
