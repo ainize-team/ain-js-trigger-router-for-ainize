@@ -18,9 +18,6 @@ git clone git@github.com:ainize-team/ainize-wrapper-server.git
 ```JS
 BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
 PRIVATE_KEY= // App owner's AI Network private key.
-INFERENCE_URL= // LLM Inference endpoint.
-MODEL_NAME= // Model name.
-API_KEY= // API Key to using your model. (optional) 
 PORT= // Port number to run this server. (optional, default: 3000)
 ```
 ## usage
@@ -94,21 +91,9 @@ const {
 } = extractDataFromModelRequest(req);
 ```
 
-### Set inference endpoint
-
-위 기능들을 이용하여 trigger function을 통해 들어온 요청을 처리하는 라우터가 `src/index.ts`에 정의되어 있다. Ainize-js 를 통해 배포된 trigger function은 고정적으로 `/model` 에 POST 요청을 보낸다.
-```JS
-app.post(
-  '/model',
-  middleware.blockchainTriggerFilter, // Check request is from AI Network.
-  async (req: Request, res: Response) => {
-    ...
-});
-```
-
 ### Connect your inference service.
 
-받아온 데이터를 당신의 AI Service에 맞춰 가공하고 요청을 보낼 수 있도록 당신은 `src/inference.ts` 를 수정해야한다.
+To integrate your AI service, modify `src/inference.ts`. This file allows you to process the incoming data, format it appropriately, and send requests to your inference service.
 ```JS
 import { Request } from 'express'
 
@@ -126,7 +111,8 @@ export const inference = async (req: Request): Promise<any> =>{
 }
 ```
 
-아래는 ainize에서 무료로 제공하는 llama 3.1을 연결하는 예시코드이다.
+## Example: Connecting Llama 3.1
+For an example setup, refer to the code provided in the repository. It demonstrates how to configure a connection to Llama 3.1, an AI model offered by Ainize for free.
 ```JS
 export const inference = async (req: Request): Promise<any> =>{
   const { 
@@ -137,8 +123,8 @@ export const inference = async (req: Request): Promise<any> =>{
   } = extractDataFromModelRequest(req);
 
   ////// Insert your AI Service's Inference Code. //////
-  const modelName = process.env.MODEL_NAME as string;
-  const inferenceUrl = process.env.INFERENCE_URL as string;
+  const modelName = process.env.MODEL_NAME as string; // http://101.202.37.10:8000/v1/chat/completions
+  const inferenceUrl = process.env.INFERENCE_URL as string; // meta-llama/Llama-3.2-11B-Vision-Instruct
   const apiKey = process.env.API_KEY as string;
 
   const prompt = requestData.prompt;
