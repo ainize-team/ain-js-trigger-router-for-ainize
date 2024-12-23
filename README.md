@@ -1,69 +1,146 @@
-# Ainize Wrapper Server
 
-Ainize wrapper server is an template backend of AI Model deployed by [ainize-js](https://github.com/ainize-team/ainize-js)
+# ain-js Trigger Router for Ainize
+The "ain-js Trigger Router for Ainize" is a container designed to act as a central intermediary, facilitating trigger management and data flow between the [Ainize platform](https://github.com/ainize-team/ainize-js) and the [ain-js library](https://github.com/ainblockchain/ain-js). It processes requests and routes events originating from the AI Network blockchain, ensuring seamless integration and smooth interaction between the two systems.
+
 
 ## Requirements
 
 node >= 18
 
-## usage
 
-### Install
+## Install
 
 Clone this repository.
 ```
-git clone git@github.com:ainize-team/ainize-wrapper-server.git
+git clone git@github.com:ainize-team/ain-js-Trigger-Router-for-Ainize.git
 ```
 
-### Set env
+## Set envs
 ```JS
-BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
-PRIVATE_KEY= // App owner's private key.
-MODEL_URL= // LLM Service endpoint.
-INFERENCE_URL= // LLM Inference endpoint.
-MODEL_NAME= // Model name.
-API_KEY= // API Key to use model. (optional) 
-PORT= // Port number to run this server. (default: 3000)
+BLOCKCHAIN_NETWORK= // AI Network network. mainnet = '1', testnet = '0'. 
+PRIVATE_KEY= // AI Network private key to send Transactions for your AI Service.
+PORT= // Port number to run this server. (optional, default: 3000)
+```
+## usage
+
+## Ready to get POST request from AI Network trigger function
+
+A trigger function in AI Network automatically sends POST requests to a specified URL whenever a specific value in the blockchain database changes. For more details, see the [AI Network Docs](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger)
+
+Requests from trigger functions include complex data structures. 
+```js
+{
+  fid: 'function-id',
+  function: {
+    function_type: 'REST',
+    function_url: 'https://function_url.ainetwork.ai/',
+    function_id: 'function-id'
+  },
+  valuePath: [
+    'apps',
+    'app_name',
+    'sub_path',
+    '0xaddress...', // Path variable matched with functionPath.
+    ...
+    ],
+  functionPath: [
+    'apps',
+    'app_name',
+    'sub_path',
+    '$address', // Path variable name. Start with '$'
+    ...
+  ],
+  value: <ANY_DATA_TO_WRITE_ON_BLOCKCHAIN>,
+  ...
+  params: {
+    address: '0xaddress...' // Path variable.
+  },
+  ...
+  transaction: {
+    tx_body: { ... },
+    signature: '0xsignature...',
+    ...
+  },
+  ...
+}
 ```
 
-### Inference endpoint
+The ain-js Trigger Router for Ainize simplifies handling these requests with built-in utilities.
 
-The AI model deployed via Ainize automatically sends a POST request to `https://YOUR.ENDPOINT.ai/model` when an inference request is made, utilizing the trigger function feature of the AI Network blockchain.
-
-You can implement the inference function by modifying `app.post('/model', ...)` in src/index.ts.
+### Middle ware to check It is from trigger function.
+Use the provided middleware `blockchainTriggerFilter` to verify that a request originates from a trigger function.
 ```JS
+import Middleware from './middlewares/middleware';
+const middleware = new Middleware();
+
 app.post(
-  '/model',
-  middleware.blockchainTriggerFilter, // Check request is from AI Network.
-  async (req: Request, res: Response) => {
-  const { appName, requestData, requestKey } = extractDataFromModelRequest(req); // Parse triggered data
-  try {
-    const model = await ainModule.getModel(appName);
-    const amount = 0; // Cost of inference. 
-    const responseData = await inference(requestData.prompt); // You need to change this "inference" function to set your model.
-    await handleRequest(req, amount, RESPONSE_STATUS.SUCCESS, responseData); // Discount user's credit and write the response data to blockchain.
-  } catch(e) {
-    console.log('error: ', e);
-    await ainize.internal.handleRequest(req, 0, RESPONSE_STATUS.FAIL,'error'); // Write error to response path.
-  }
-});
+  ...
+  middleware.blockchainTriggerFilter,
+  ...
+)
+```
+### Extracting the required datas from the request
+Easily extract key data points using helper functions.
+```JS
+import { extractDataFromModelRequest } from './utils/extractor';
+
+const { 
+  appName, 
+  requesterAddress,
+  requestData, 
+  requestKey 
+} = extractDataFromModelRequest(req);
 ```
 
-### Connect Model
+### Connect your inference service.
 
-If the usage of your AI service is as described below, you can connect your service by simply modifying the `.env` file. However, if further adjustments are needed, edit `src/inference.ts`.
+To integrate your AI service, modify `src/inference.ts`. This file allows you to process the incoming data, format it appropriately, and send requests to your inference service.
 ```JS
-export const inference = async (prompt: string): Promise<string> =>{
+import { Request } from 'express'
+
+export const inference = async (req: Request): Promise<any> =>{
+  const { 
+    appName, 
+    requesterAddress,
+    requestData, 
+    requestKey 
+  } = extractDataFromModelRequest(req);
+
+  ////// Insert your AI Service's Inference Code. //////
+
+  // return the result
+}
+```
+
+## Example: Simple AI Service Integration
+
+This is a simple example provided to help you understand how to connect an AI service. Modify it according to your specific requirements.
+```JS
+export const inference = async (req: Request): Promise<any> =>{
+  const { 
+    appName, 
+    requesterAddress,
+    requestData, 
+    requestKey 
+  } = extractDataFromModelRequest(req);
+
+  ////// Insert your AI Service's Inference Code. //////
+  const inferenceUrl = process.env.INFERENCE_URL as string; // https://llama_vision.ainize.xyz/chat/completions (sample url. not working)
+  const modelName = process.env.MODEL_NAME as string; // meta-llama/Llama-3.2-11B-Vision-Instruct
+  const apiKey = process.env.API_KEY as string;
+
+  const prompt = requestData.prompt;
+
   const response = await fetch(
-    String(process.env.INFERENCE_URL),
+    inferenceUrl,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${String(process.env.API_KEY)}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: String(process.env.MODEL_NAME),
+        model: modelName,
         messages: [
           {
             role: 'user',
@@ -74,11 +151,12 @@ export const inference = async (prompt: string): Promise<string> =>{
     }
   )
   if (!response.ok) {
-    throw new Error(
-      `Fail to inference: ${JSON.stringify(await response.json())}`
-    );
+    throw new Error(`Fail to inference: ${JSON.stringify(await response.json())}`);
   }
   const data = await response.json();
+
+  // return the result
   return data.choices[0].message.content;
 }
+
 ```
