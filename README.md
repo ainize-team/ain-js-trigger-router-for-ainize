@@ -1,6 +1,7 @@
 
-# Ainize Wrapper Server
-Ainize wrapper server is an template backend of AI Model deployed by [ainize-js](https://github.com/ainize-team/ainize-js)
+# ain-js Trigger Router for Ainize
+The "ain-js Trigger Router for Ainize" is a container designed to act as a central intermediary, facilitating trigger management and data flow between the [Ainize platform](https://github.com/ainize-team/ainize-js) and the [ain-js library](https://github.com/ainblockchain/ain-js). It processes requests and routes events originating from the AI Network blockchain, ensuring seamless integration and smooth interaction between the two systems.
+
 
 ## Requirements
 
@@ -11,13 +12,13 @@ node >= 18
 
 Clone this repository.
 ```
-git clone git@github.com:ainize-team/ainize-wrapper-server.git
+git clone git@github.com:ainize-team/ain-js-Trigger-Router-for-Ainize.git
 ```
 
 ## Set envs
 ```JS
-BLOCKCHAIN_NETWORK= // mainnet = '1', testnet = '0'. 
-PRIVATE_KEY= // App owner's AI Network private key.
+BLOCKCHAIN_NETWORK= // AI Network network. mainnet = '1', testnet = '0'. 
+PRIVATE_KEY= // AI Network private key to send Transactions for your AI Service.
 PORT= // Port number to run this server. (optional, default: 3000)
 ```
 ## usage
@@ -64,7 +65,7 @@ Requests from trigger functions include complex data structures.
 }
 ```
 
-The ainize-wrapper-server simplifies handling these requests with built-in utilities.
+The ain-js Trigger Router for Ainize simplifies handling these requests with built-in utilities.
 
 ### Middle ware to check It is from trigger function.
 Use the provided middleware `blockchainTriggerFilter` to verify that a request originates from a trigger function.
@@ -111,8 +112,9 @@ export const inference = async (req: Request): Promise<any> =>{
 }
 ```
 
-## Example: Connecting Llama 3.1
-For an example setup, refer to the code provided in the repository. It demonstrates how to configure a connection to Llama 3.1, an AI model offered by Ainize for free.
+## Example: Simple AI Service Integration
+
+This is a simple example provided to help you understand how to connect an AI service. Modify it according to your specific requirements.
 ```JS
 export const inference = async (req: Request): Promise<any> =>{
   const { 
@@ -123,8 +125,8 @@ export const inference = async (req: Request): Promise<any> =>{
   } = extractDataFromModelRequest(req);
 
   ////// Insert your AI Service's Inference Code. //////
-  const modelName = process.env.MODEL_NAME as string; // http://101.202.37.10:8000/v1/chat/completions
-  const inferenceUrl = process.env.INFERENCE_URL as string; // meta-llama/Llama-3.2-11B-Vision-Instruct
+  const inferenceUrl = process.env.INFERENCE_URL as string; // https://llama_vision.ainize.xyz/chat/completions (sample url. not working)
+  const modelName = process.env.MODEL_NAME as string; // meta-llama/Llama-3.2-11B-Vision-Instruct
   const apiKey = process.env.API_KEY as string;
 
   const prompt = requestData.prompt;
