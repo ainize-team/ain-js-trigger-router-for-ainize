@@ -2,7 +2,7 @@
 # Ain-js Trigger Router for Ainize
 The "Ain-js Trigger Router for Ainize" is an intermediary between the [Ainize](https://github.com/ainize-team/ainize-js?tab=readme-ov-file#deploy) and the [ain-js library](https://github.com/ainblockchain/ain-js?tab=readme-ov-file#function-call). It processes requests and routes events originating from the AI Network blockchain, and forwards them to the models.
 
-You can also deploy your models on [AI Network GPU Service](https://gpu.ainetwork.ai).
+You can choose to deploy your models on the [AI Network GPU Service](https://gpu.ainetwork.ai).
 
 ![image](/public/sample_structure.png)
 
