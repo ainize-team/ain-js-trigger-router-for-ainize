@@ -1,8 +1,6 @@
 
-# Ain-js Trigger Router for Ainize
-The "Ain-js Trigger Router for Ainize" is an intermediary between the [Ainize](https://github.com/ainize-team/ainize-js?tab=readme-ov-file#deploy) and the [ain-js library](https://github.com/ainblockchain/ain-js?tab=readme-ov-file#function-call). It processes requests and routes events originating from the AI Network blockchain, and forwards them to the models.
-
-You can choose to deploy your models on the [AI Network GPU Service](https://gpu.ainetwork.ai).
+# AI Network Blockchain Router for Model API
+The "AI Network Blockchain Router for Model API" is an intermediary between the [AI Network Blockchain](https://github.com/ainblockchain/ain-js?tab=readme-ov-file#function-call) and the Model API. It processes requests and routes events originating from the AI Network blockchain, and forwards them to the models.
 
 ![image](/public/sample_structure.png)
 
@@ -16,7 +14,7 @@ node >= 18
 
 Clone this repository.
 ```
-git clone git@github.com:ainize-team/ain-js-Trigger-Router-for-Ainize.git
+git clone git@github.com:ainize-team/ainetwork-blockchain-router-for-model-api.git
 ```
 
 ## Set envs
@@ -69,7 +67,7 @@ Requests from trigger functions include complex data structures.
 }
 ```
 
-The ain-js Trigger Router for Ainize simplifies handling these requests with built-in utilities.
+The AI Network Blockchain Router for Model API simplifies handling these requests with built-in utilities.
 
 ### Middle ware to check It is from trigger function.
 Use the middleware `blockchainTriggerFilter` to verify requests originate from a trigger function.
