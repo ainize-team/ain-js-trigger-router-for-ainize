@@ -1,6 +1,8 @@
 
-# ain-js Trigger Router for Ainize
-The "ain-js Trigger Router for Ainize" is a container designed to act as a central intermediary, facilitating trigger management and data flow between the [Ainize platform](https://github.com/ainize-team/ainize-js) and the [ain-js library](https://github.com/ainblockchain/ain-js). It processes requests and routes events originating from the AI Network blockchain, ensuring seamless integration and smooth interaction between the two systems.
+# AI Network Blockchain Router for Model API
+The "AI Network Blockchain Router for Model API" is an intermediary between the [AI Network Blockchain](https://github.com/ainblockchain/ain-js?tab=readme-ov-file#function-call) and the Model API. It processes requests and routes events originating from the AI Network blockchain, and forwards them to the models.
+
+![image](/public/sample_structure.png)
 
 
 ## Requirements
@@ -12,7 +14,7 @@ node >= 18
 
 Clone this repository.
 ```
-git clone git@github.com:ainize-team/ain-js-Trigger-Router-for-Ainize.git
+git clone git@github.com:ainize-team/ainetwork-blockchain-router-for-model-api.git
 ```
 
 ## Set envs
@@ -25,9 +27,9 @@ PORT= // Port number to run this server. (optional, default: 3000)
 
 ## Ready to get POST request from AI Network trigger function
 
-A trigger function in AI Network automatically sends POST requests to a specified URL whenever a specific value in the blockchain database changes. For more details, see the [AI Network Docs](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger)
+A trigger function in AI Network automatically sends POST requests to a specified URL whenever a specific value in the blockchain database changes. For more details, watch this! 👉  [What is AI Network Trigger?](https://docs.ainetwork.ai/ain-blockchain/developer-guide/tools/ainize-trigger)
 
-Requests from trigger functions include complex data structures. 
+Requests from trigger functions include complex data structures.
 ```js
 {
   fid: 'function-id',
@@ -65,10 +67,10 @@ Requests from trigger functions include complex data structures.
 }
 ```
 
-The ain-js Trigger Router for Ainize simplifies handling these requests with built-in utilities.
+The AI Network Blockchain Router for Model API simplifies handling these requests with built-in utilities.
 
 ### Middle ware to check It is from trigger function.
-Use the provided middleware `blockchainTriggerFilter` to verify that a request originates from a trigger function.
+Use the middleware `blockchainTriggerFilter` to verify requests originate from a trigger function.
 ```JS
 import Middleware from './middlewares/middleware';
 const middleware = new Middleware();
@@ -80,7 +82,7 @@ app.post(
 )
 ```
 ### Extracting the required datas from the request
-Easily extract key data points using helper functions.
+Easily extract key datas using helper functions.
 ```JS
 import { extractDataFromModelRequest } from './utils/extractor';
 
