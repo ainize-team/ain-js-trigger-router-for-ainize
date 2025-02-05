@@ -4,7 +4,7 @@ import Middleware from './middlewares/middleware';
 import { extractDataFromModelRequest } from './utils/extractor';
 import { handleDeposit, handleRequest } from './internal';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
-import './config'; // 환경 변수 검증을 바로 수행
+import './config'; // Validate environment variables immediately
 import { parseChainId } from './constants';
 import { inference } from './inference';
 
@@ -28,6 +28,20 @@ app.post('/model',
     await handleRequest(req, 0, RESPONSE_STATUS.FAIL,'error');
   }
 });
+
+//Deprecated
+// app.post('/deposit',
+//   middleware.blockchainTriggerFilter,
+//   async (req: Request, res:Response) => {
+//   console.log("deposit");
+//   try{ 
+//     const result = await handleDeposit(req);
+//     console.log(result);
+//   }catch(e) {
+//     console.log('error: ',e);
+//     res.send('error');
+//   }
+// });
 
 app.post('/test',
   async (req:Request, res:Response) => {
