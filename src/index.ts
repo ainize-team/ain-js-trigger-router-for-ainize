@@ -1,8 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import AinModule from './ain';
 import Middleware from './middlewares/middleware';
-import { extractDataFromModelRequest } from './utils/extractor';
-import { handleDeposit, handleRequest } from './internal';
+import { handleRequest } from './internal';
 import { RESPONSE_STATUS } from '@ainize-team/ainize-js/dist/types/type';
 import './config'; // Validate environment variables immediately
 import { parseChainId } from './constants';
