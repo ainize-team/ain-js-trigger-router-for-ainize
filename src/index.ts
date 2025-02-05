@@ -53,13 +53,13 @@ app.post('/test',
       res.send('error');
     }
   }
-)
+);
 
 app.get('/',
   (req: Request, res: Response) => {
     res.send('health check')
   }
-)
+);
 
 app.listen(PORT,() => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);

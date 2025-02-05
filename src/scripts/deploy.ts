@@ -1,8 +1,8 @@
 import Ainize from '@ainize-team/ainize-js';
 import './config'; // Validate environment variables immediately
-const ainPrivateKey =  process.env.PRIVATE_KEY || '';
+const ainPrivateKey = process.env.PRIVATE_KEY || '';
 const modelName = process.env.MODEL_NAME || '';
-const modelUrl =process.env.MODEL_URL || '';
+const modelUrl = process.env.MODEL_URL || '';
 
 const main = async () => {
   try {

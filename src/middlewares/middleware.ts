@@ -11,7 +11,6 @@ export default class Middleware {
     this.cache = new NodeCache();
   }
 
-
   blockchainTriggerFilter = async (req: Request, res: Response, next: NextFunction) => {
     //check if request is from blockchain trigger
     try {
