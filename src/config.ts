@@ -9,7 +9,7 @@ function validateEnv() {
         'MODEL_URL',
         'INFERENCE_URL',
         'MODEL_NAME',
-        'API_KEY',
+        // 'API_KEY',
         // Add more required environment variables here
     ];
 
